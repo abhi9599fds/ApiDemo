@@ -9,13 +9,13 @@ import { PostRouter } from "./routes/postRoutes.js"
 import compression from "compression";
 
 
-
 const app = express();
+app.use(compression({
+    filter: function () { return true; }
+}));
 
 
 const PORT = process.env.PORT || 3000;
-
-app.use(compression());
 
 app.use(cors());
 
