@@ -1,4 +1,4 @@
-import config  from "dotenv";
+import { config }  from "dotenv";
 //const st = "postgres://tfgytbfruesaxj:f2677809ba562d6ee197aa2332a415459864668cb2c67976eaa8aa2532bb0465@ec2-3-231-241-17.compute-1.amazonaws.com:5432/d29pfls8jaafg2"
 config();
 
