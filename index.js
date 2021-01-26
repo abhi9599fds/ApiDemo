@@ -10,10 +10,14 @@ import compression from "compression";
 
 
 const app = express();
-app.use(compression({
-    filter: function () { return true; }
-}));
+app.use(compression({filter: shouldCompress}))
 
+function shouldCompress (req, res) {
+   if (req.headers['x-no-compression']) {
+       return false
+   }
+   return compression.filter(req, res)
+}
 
 const PORT = process.env.PORT || 3000;
 
@@ -45,9 +49,7 @@ app.use((req,res,next) => {
     next();
 });
 
-app.get("/",async (req,res) => {
-    res.json({"hi" : 1});
-});
+
 
 app.use("/user",UserRoutes );
 app.use("/contest",ContestRouter );
