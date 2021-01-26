@@ -59,7 +59,7 @@ async function login(req ,res )
                 var newhash = createHash('sha512',user.passSalt).
                             update(req.body.password).
                             digest('hex');
-                if(newhash != passHash){
+                if(newhash != user.passHash){
                     return res.status(401).send({
                         msg : "Password Incorrect"
                     });
