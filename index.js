@@ -12,8 +12,10 @@ import compression from "compression";
 
 const app = express();
 
-app.use(compression());
+
 const PORT = process.env.PORT || 3000;
+
+app.use(compression());
 
 app.use(cors());
 
