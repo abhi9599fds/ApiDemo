@@ -9,6 +9,9 @@ const sequelize = new Sequelize(
       host:dbConn.HOST,
       port :dbConn.PORT,
       dialect :dbConn.dialect,
+      dialectOptions: {
+         ssl: true
+      },
       pool :{
          max : dbConn.pool.max,
          min : dbConn.pool.min,
