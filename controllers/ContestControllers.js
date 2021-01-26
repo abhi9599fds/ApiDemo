@@ -154,7 +154,7 @@ async function winner(req,res)
         await PostModel.findAll({
             include: [{
                 model : UserModel,
-                attributes : ['name']
+                attributes : [ 'name' ,'profilePic' ]
             }],
             where :{
                 id :{
