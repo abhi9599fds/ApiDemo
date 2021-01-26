@@ -1,7 +1,5 @@
 import { Router } from "express";
-import { createContest ,getContestAll ,getContestByAcademy ,
-    deleteContest , winner ,getWinnerAcademy ,getWinnerUser } from "../controllers/ContestControllers.js";
-
+import { createContest ,getContestAll ,getContestByAcademy ,deleteContest , winner ,getWinnerAcademy ,getWinnerUser } from "../controllers/ContestControllers.js";
 
 const ContestRouter = Router();
 

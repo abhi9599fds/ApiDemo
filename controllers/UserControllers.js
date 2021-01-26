@@ -143,5 +143,23 @@ async function deleteOne(req ,res)
     }
 }
 
+async function getUserAll(req,res){
+    try{
 
-export { createUser ,login ,deleteAll ,deleteOne };
+        await UserModel.findAll({
+            where :{}
+        }).then(data => {
+            return res.send({
+                data :data
+            });
+        });
+    }
+    catch(err){
+        res.status(400).send({
+            msg :err.message
+        });
+    }
+}
+
+
+export { createUser ,login ,deleteAll ,deleteOne, getUserAll };
