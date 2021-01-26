@@ -1,5 +1,5 @@
 import { UserModel } from "../models/userModel.js";
-import { randomBytes ,createHash } from "crypto";
+import { randomBytes ,createHash , } from "crypto";
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 const { sign } = jwt;
@@ -56,6 +56,15 @@ async function login(req ,res )
             }
         }).then (user => {
             if (user != null){
+                var newhash = createHash('sha512',user.passSalt).
+                            update(req.body.password).
+                            digest('hex');
+                if(newhash != passHash){
+                    return res.status(401).send({
+                        msg : "Password Incorrect"
+                    });
+                }
+
                 const token = sign({ id : user.id, 
                     email : user.email 
                 },process.env.TokenKey);
