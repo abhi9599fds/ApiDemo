@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "mvp",
+            "database": "mvpdatabase",
+            "username": "abhi9599",
+            "password": "1234"
+        }
+    ]
+}
