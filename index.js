@@ -6,10 +6,13 @@ import { ContestRouter } from "./routes/contestRoutes.js";
 import cors from "cors";
 import http from "http";
 import { PostRouter } from "./routes/postRoutes.js"
+import compression from "compression";
 
 
 
 const app = express();
+
+app.use(compression());
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
@@ -30,7 +33,7 @@ app.use(bodyParser.urlencoded({
 app.use((req,res,next) => {
     res.header('Access-Control-Allow-Origin','*');
     res.header('Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization,Accept-Encoding');
     if(req.method === 'OPTIONS')
     {
         res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');

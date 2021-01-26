@@ -166,7 +166,6 @@ async function winner(req,res)
             limit : 3,
             attributes : [ ["id","postId"], "userId" ,"path" ,"coverPic" ,"caption", "postType" ]         
         }).then(async (posts) => {
-            console.log(posts);
             if(posts.length <= 0) {
                 return res.status(400).send({
                     msg : "Post Not Found"
@@ -278,7 +277,6 @@ async function getWinnerUser(req,res)
         }).then((data) => {       
             var dt = {};
             data.forEach(post => {
-                console.log(post.winner);
                 if(post.winner["1"]['userId'] == req.body.userId){
                     dt["1"] = post.winner["1"];
                     dt["1"]["contestId"] = post["contestId"],
