@@ -164,7 +164,7 @@ async function winner(req,res)
             },
             raw: true,
             limit : 3,
-            attributes : [ "id", "userId" ,"path" ,"coverPic" ,"caption", "postType" ]         
+            attributes : [ ["id","postId"], "userId" ,"path" ,"coverPic" ,"caption", "postType" ]         
         }).then(async (posts) => {
             console.log(posts);
             if(posts.length <= 0) {
@@ -175,7 +175,7 @@ async function winner(req,res)
             }
             var winner = {};
             posts.forEach(post => {
-                var pos = postIds.findIndex(ele =>  ele == post["id"]);
+                var pos = postIds.findIndex(ele =>  ele == post["postId"]);
                 if(pos != null)
                     winner[`${pos+1}`] = post
             });
@@ -228,7 +228,7 @@ async function getWinnerAcademy(req,res)
                 attributes :[ 'academy' ],          
             }],
             raw :true,
-            attributes : ['winner' ,'id','orgId','talent','contestName','coverPic' ]
+            attributes : ['winner' ,['id','contestId'],'orgId','talent','contestName','coverPic' ]
         }).then(data => {
             res.send({
                 data : data
@@ -274,14 +274,14 @@ async function getWinnerUser(req,res)
                     }],
                 }
             },
-            attributes : [ 'id','winner','contestName' ,'coverPic','talent']
+            attributes : [ ['id','contestId'],'winner','contestName' ,'coverPic','talent']
         }).then((data) => {       
             var dt = {};
             data.forEach(post => {
                 console.log(post.winner);
                 if(post.winner["1"]['userId'] == req.body.userId){
                     dt["1"] = post.winner["1"];
-                    dt["1"]["contestId"] = post["id"],
+                    dt["1"]["contestId"] = post["contestId"],
                     dt["1"]['contestName'] = post['contestName']
                     dt["1"]['talent'] = post['talent']
                     dt["1"]['academy'] = post['User.academy']
@@ -291,7 +291,7 @@ async function getWinnerUser(req,res)
                 }
                 else if(post.winner["2"]['userId'] == req.body.userId){
                     dt["2"] = post.winner["2"];
-                    dt["2"]["contestId"] = post["id"],
+                    dt["2"]["contestId"] = post["contestId"],
                     dt["2"]['contestName'] = post['contestName']
                     dt["2"]['talent'] = post['talent']
                     dt["2"]['academy'] = post['User.academy'],
@@ -300,7 +300,7 @@ async function getWinnerUser(req,res)
                 }
                 else if(post.winner["3"]['userId'] == req.body.userId){
                     dt["3"] = post.winner["3"];
-                    dt["3"]["contestId"] = post["id"],
+                    dt["3"]["contestId"] = post["contestId"],
                     dt["3"]['contestName'] = post['contestName']
                     dt["3"]['talent'] = post['talent']
                     dt["3"]['academy'] = post['User.academy']
