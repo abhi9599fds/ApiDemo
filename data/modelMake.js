@@ -13,7 +13,6 @@ const sequelize = new Sequelize(
          ssl : true
       },
       ssl :true,
-      native :true,
       pool :{
          max : dbConn.pool.max,
          min : dbConn.pool.min,
