@@ -10,8 +10,13 @@ const sequelize = new Sequelize(
       port :dbConn.PORT,
       dialect :dbConn.dialect,
       dialectOptions: {
-         ssl: true
+         ssl : {
+            require : true,
+            rejectUnauthorized: false 
+         }
       },
+      ssl :true,
+      native :true,
       pool :{
          max : dbConn.pool.max,
          min : dbConn.pool.min,
