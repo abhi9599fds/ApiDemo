@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { createContest ,getContestAll ,getContestByAcademy ,deleteContest , winner ,getWinnerAcademy ,getWinnerUser } from "../controllers/ContestControllers.js";
+import * as ContestControllers from "../controllers/ContestControllers.js"
 
 const ContestRouter = Router();
 
-ContestRouter.post("/createContest" ,createContest);
-ContestRouter.get("/getContestAll",getContestAll);
-ContestRouter.post("/getContestByAcademy",getContestByAcademy);
-ContestRouter.delete("/deleteContest",deleteContest);
-ContestRouter.put("/winnerInsert",winner);
-ContestRouter.post("/getWinnerAcademy", getWinnerAcademy);
-ContestRouter.post("/getWinner",getWinnerUser);
+ContestRouter.post("/createContest" ,ContestControllers.createContest);
+ContestRouter.get("/getContestAll",ContestControllers.getContestAll);
+ContestRouter.post("/getContestByAcademy",ContestControllers.getContestByAcademy);
+ContestRouter.delete("/deleteContest",ContestControllers.deleteContest);
+ContestRouter.put("/winnerInsert",ContestControllers.winner);
+ContestRouter.post("/getWinnerAcademy", ContestControllers.getWinnerAcademy);
+ContestRouter.post("/getWinner",ContestControllers.getWinnerUser);
 
 export { ContestRouter };

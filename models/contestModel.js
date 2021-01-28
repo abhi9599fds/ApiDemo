@@ -30,7 +30,7 @@ const ContestModel = sequelize.define("ContestDb" ,{
     fees : { type : DataTypes.INTEGER, allowNull: false },
     coverPic : { type :DataTypes.STRING ,allowNull :true },
     endDt : { type :DataTypes.DATE , allowNull: false },
-    end : { type: DataTypes.BOOLEAN,allowNull :true }
+    end : { type: DataTypes.BOOLEAN, allowNull :true }
 });
 
 ContestModel.hasMany(PostModel,{ foreignKey : 'contestId' ,onDelete:`CASCADE`});

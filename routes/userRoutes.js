@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { jwtTokenAuth } from "../middleware/authMiddleware.js";
-import { createUser , login , deleteAll ,deleteOne , getUserAll } from "../controllers/UserControllers.js";
+import * as UserControllers from "../controllers/UserControllers.js";
 
 const UserRoutes = Router();
 
-UserRoutes.post("/create",createUser);
-UserRoutes.post("/login" ,login );
-UserRoutes.delete("/deleteAll",jwtTokenAuth ,deleteAll );
-UserRoutes.delete("/deleteOne",jwtTokenAuth ,deleteOne );
-UserRoutes.get("/getUserAll",getUserAll);
+UserRoutes.post("/create",UserControllers.createUser);
+UserRoutes.post("/login" ,UserControllers.login );
+UserRoutes.delete("/deleteAll",jwtTokenAuth ,UserControllers.deleteAll );
+UserRoutes.delete("/deleteOne",jwtTokenAuth ,UserControllers.deleteOne );
+UserRoutes.get("/getUserAll",UserControllers.getUserAll);
 
 export { UserRoutes };

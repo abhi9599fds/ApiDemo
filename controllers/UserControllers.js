@@ -2,7 +2,7 @@ import { UserModel } from "../models/userModel.js";
 import { randomBytes ,createHash , } from "crypto";
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
-const { sign } = jwt;
+const { sign  } = jwt;
 
 config();
 
@@ -67,7 +67,10 @@ async function login(req ,res )
 
                 const token = sign({ id : user.id, 
                     email : user.email 
-                },process.env.TokenKey);
+                },process.env.TokenKey,{
+                    expiresIn : "4d"
+                });
+                
                 
                 res.send({
                     token : token,

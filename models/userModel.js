@@ -10,9 +10,9 @@ const UserModel = sequelize.define("Users" , {
         type: UUID, 
         defaultValue : UUIDV4
     },
-    name : { type : DataTypes.STRING ,allowNull:false},
+    name : { type : DataTypes.STRING ,allowNull:false },
     phn : { type : DataTypes.INTEGER ,allowNull:false },
-    email : { type : DataTypes.STRING , unique : true ,allowNull : false},
+    email : { type : DataTypes.STRING , unique : true ,allowNull : false },
     passHash : { type : DataTypes.STRING ,allowNull:false },
     passSalt : { type : DataTypes.STRING ,allowNull:false },
     academy : { type : DataTypes.STRING ,allowNull:true },
