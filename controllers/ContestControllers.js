@@ -117,7 +117,8 @@ async function getContestByAcademy(req,res)
                 model : UserModel,
                 where :{
                     academy : req.body.academy
-                }
+                },
+                attributes : [ ]
             }],
             where : {},
             raw : true
