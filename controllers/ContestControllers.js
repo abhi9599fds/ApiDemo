@@ -113,9 +113,14 @@ async function getContestByAcademy(req,res)
     try {
 
         await ContestModel.findAll({
-            where : {
-                academy : req.body.academy
-            }
+            include : [{
+                model : UserModel,
+                where :{
+                    academy : req.body.academy
+                }
+            }],
+            where : {},
+            raw : true
         }).then((post) => {
             res.send({
                 data : post
