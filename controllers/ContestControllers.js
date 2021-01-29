@@ -118,7 +118,7 @@ async function getContestByAcademy(req,res)
                 where :{
                     academy : req.body.academy
                 },
-                attributes : [ ]
+                attributes : []
             }],
             where : {},
             raw : true
