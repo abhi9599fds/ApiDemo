@@ -13,11 +13,19 @@ function jwtTokenAuth(req ,res ,next)
             const token = req.headers.authorization.split(' ')[1];
             const decoded = verify(token , process.env.TokenKey ,
                 (err ,user ) =>{
+                    console.log(user)
                     if(err){
-                        res.status(401).send({
+                        return res.status(401).send({
                             "msg" : "Unauthorize"
                         });
                     }
+
+                    // if(user.id !== req.body.uid){
+                    //     return res.status(401).send({
+                    //         "msg" : "Unauthorize"
+                    //     });
+                    // } 
+                    
                     next();
                 }
             );

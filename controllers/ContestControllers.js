@@ -11,7 +11,7 @@ async function createContest(req ,res)
     {
         await UserModel.findOne({
             where : {
-                id : req.body.orgId,
+                id : req.body.oid,
                 academy : req.body.academy
             },
             attributes : [ 'typeUser' ]
@@ -20,24 +20,24 @@ async function createContest(req ,res)
             if(user != null  && user.typeUser.toLowerCase() == "owner")
             {
                 const contestModel = {
-                    orgId : req.body.orgId,
+                    orgId : req.body.oid,
                     winner : req.body.winner,
                     prizes : req.body.prizes,
-                    contestName : req.body.contestName,
+                    contestName : req.body.cname,
                     talent : req.body.talent,
                     // YYYY-MM-DD
-                    endDt : Date.parse(req.body.endDt),
-                    coverPic : req.body.coverPic,
+                    endDt : Date.parse(req.body.end_dt),
+                    coverPic : req.body.cover_pic,
                     end : false,
                     desc : req.body.desc,
                     fees : req.body.fees,
                     curr : req.body.curr,
-                    certi : req.body.certi,
+                    certi : req.body.certi_bool,
                 };
 
                 await ContestModel.create(contestModel).then((ct) =>{
                     res.send({
-                        data : ct
+                        msg : "Contest Created"
                     });
                 }).catch(err => {
                     return res.status(401).send({
@@ -49,7 +49,7 @@ async function createContest(req ,res)
             else{
                 return res.status(400).send({
                     msg : "No Permission"
-                })
+                });
             }
         })   
     } 
@@ -166,11 +166,11 @@ async function winner(req,res)
                 id :{
                     [Op.in] : postIds
                 },
-               contestId : req.body.contestId 
+               contestId : req.body.cid
             },
             raw: true,
             limit : 3,
-            attributes : [ ["id","postId"], "userId" ,"path" ,"coverPic" ,"caption", "postType" ]         
+            attributes : [ ["id","postId"], "userId" ,"path" ,"coverPic" ,"caption", "postType","likes" ]         
         }).then(async (posts) => {
             if(posts.length <= 0) {
                 return res.status(400).send({
@@ -185,10 +185,11 @@ async function winner(req,res)
                     winner[`${pos+1}`] = post
             });
             let rows = await ContestModel.update({
-                winner : winner
+                winner : winner,
+                end : true,
             },{
                 where : {
-                    id : req.body.contestId
+                    id : req.body.cid
                 }
             }).catch(err =>{
                 res.status(400).send({
@@ -196,21 +197,21 @@ async function winner(req,res)
                 });
             })
             if(rows[0] >= 1){
-                res.send({
-                msg : "Inserted" });
+                return res.send({
+                msg : "Inserted"});
             }
             else{
-                res.status(400).send({
+                return res.status(400).send({
                     msg : "Not Updated"
                 })
-                return;
+                
             }
         }).catch((err) =>{
-            res.status(400).send({
+            return res.status(400).send({
                 msg : err.message
             });
-            return;
-        });;
+            
+        });
  
     } 
     catch (error) {
@@ -228,10 +229,17 @@ async function getWinnerAcademy(req,res)
             include :[{
                 model : UserModel,
                 where : {
-                    "academy": req.body.academy
+                    "academy": req.body.academy,
+ 
                 },
-                attributes :[ 'academy' ],          
+                attributes :[ 'academy' ],  
+                        
             }],
+            where : {
+                winner : {
+                    [Op.ne] : null
+                }
+            },
             raw :true,
             attributes : ['winner' ,['id','contestId'],'orgId','talent','contestName','coverPic' ]
         }).then(data => {
@@ -266,15 +274,15 @@ async function getWinnerUser(req,res)
                 winner : {
                     [Op.or] : [{
                         '"1"' :{
-                            '"userId"': req.body.userId
+                            '"userId"': req.body.uid
                         }
                     },{
                         '"2"' :{
-                            '"userId"': req.body.userId
+                            '"userId"': req.body.uid
                         }
                     },{
                         '"3"' :{
-                            '"userId"': req.body.userId
+                            '"userId"': req.body.uid
                         }
                     }],
                 }
@@ -283,7 +291,7 @@ async function getWinnerUser(req,res)
         }).then((data) => {       
             var dt = {};
             data.forEach(post => {
-                if(post.winner["1"]['userId'] == req.body.userId){
+                if(post.winner["1"]['userId'] == req.body.uid){
                     dt["1"] = post.winner["1"];
                     dt["1"]["contestId"] = post["contestId"],
                     dt["1"]['contestName'] = post['contestName']
@@ -293,7 +301,7 @@ async function getWinnerUser(req,res)
                     dt["1"]['coverPic'] = post['coverPic']
                     
                 }
-                else if(post.winner["2"]['userId'] == req.body.userId){
+                else if(post.winner["2"]['userId'] == req.body.uid){
                     dt["2"] = post.winner["2"];
                     dt["2"]["contestId"] = post["contestId"],
                     dt["2"]['contestName'] = post['contestName']
@@ -302,7 +310,7 @@ async function getWinnerUser(req,res)
                     dt["2"]['talent'] = post['talent']
                     dt["2"]['coverPic'] = post['coverPic']
                 }
-                else if(post.winner["3"]['userId'] == req.body.userId){
+                else if(post.winner["3"]['userId'] == req.body.uid){
                     dt["3"] = post.winner["3"];
                     dt["3"]["contestId"] = post["contestId"],
                     dt["3"]['contestName'] = post['contestName']
@@ -326,7 +334,85 @@ async function getWinnerUser(req,res)
         return res.status(400).send({
             msg : err.message
         });
-
     }
 }
-export { createContest ,deleteContest ,getContestAll ,getContestByAcademy , winner, getWinnerAcademy, getWinnerUser };
+
+async function getWinner(req,res) 
+{
+    try 
+    {
+        let rows= await ContestModel.findAll({
+            where : {
+                winner :{
+                    [Op.ne] : null
+                }
+            }
+        });
+        return res.send({
+            msg : rows
+        });
+        
+    } 
+    catch (error) {
+        res.status(401).send({
+            msg : error.message
+        });
+    }    
+}
+
+async function getContestMid(req,res) 
+{
+    try 
+    {
+        let rows = await ContestModel.findAll({
+            where : {},
+            include :[{
+                model :UserModel,
+                attributes :['name','profilePic','academy'],
+                required :true
+            }],
+            include :[{
+                model :PostModel,
+                required :false,
+                attributes :[['id','posted']],
+                where :{
+                    userId : req.body.uid 
+                }
+            }],
+            raw : true,
+            subQuery :false,
+            offset : 6 *(req.body.mid - 1 ),
+            limit : 6,
+            attributes :['id','orgId','talent','prizes','contestName','desc','certi','curr','fees','coverPic','endDt','end']
+        })
+        
+        rows.map(item =>{
+            if(item.fees ==  0){
+                item.paid = false;
+            }
+            else{
+                item.paid = true;
+            }
+
+            if(item['PostDbs.posted'] ==  null){
+                item['PostDbs.posted'] = false;
+            }
+            else{
+                item['PostDbs.posted'] = true;
+            }
+        });
+
+        res.json({
+            msg : rows
+        });
+    } 
+    catch (error) 
+    {
+        res.status(401).send({
+            msg : error.message
+        });
+    }
+    
+}
+
+export { createContest ,deleteContest ,getContestAll ,getContestByAcademy , winner, getWinnerAcademy, getWinnerUser ,getWinner,getContestMid };

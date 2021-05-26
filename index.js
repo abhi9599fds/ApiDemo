@@ -5,8 +5,11 @@ import { UserRoutes } from "./routes/userRoutes.js";
 import { ContestRouter } from "./routes/contestRoutes.js";
 import cors from "cors";
 import http from "http";
-import { PostRouter } from "./routes/postRoutes.js"
+import { FollowRouter } from "./routes/followRoutes.js";
+import { PostRouter } from "./routes/postRoutes.js";
+import { LikeRouter } from "./routes/likeRoutes.js";
 import compression from "compression";
+import { CommentRouter } from "./routes/commentRoutes.js";
 
 
 const app = express();
@@ -24,7 +27,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 sequelize.sync({
-    alter :false
+    alter :false,
 }).then(() => { 
     console.log("DatabaseCreated"); 
 });
@@ -54,10 +57,13 @@ app.use((req,res,next) => {
 app.use("/user",UserRoutes );
 app.use("/contest",ContestRouter );
 app.use("/post",PostRouter);
+app.use('/comment',CommentRouter);
+app.use('/follow',FollowRouter);
+app.use("/",LikeRouter);
 
 
 
-//app.listen(PORT ,() => { console.log(`Running on http://localhost:${PORT}`)});
+app.listen(PORT ,() => { console.log(`Running on http://localhost:${PORT}`)});
 
-const server = http.createServer(app);
-server.listen(PORT , ()=>{ console.log(`Running on http://localhost:${PORT}`) });
+//const server = http.createServer(app);
+//server.listen(PORT , ()=>{ console.log(`Running on http://localhost:${PORT}`) });

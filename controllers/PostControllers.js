@@ -1,3 +1,4 @@
+import { LikeModel } from "../models/likesModel.js";
 import { PostModel } from "../models/postModel.js";
 import { UserModel } from "../models/userModel.js";
 
@@ -6,12 +7,12 @@ async function createPost(req,res)
     try 
     {
         const postModel = {
-            userId : req.body.userId,
-            contestId : req.body.contestId,
+            userId : req.body.uid,
+            contestId : req.body.cid,
             path : req.body.path,
-            coverPic : req.body.coverPic,
+            coverPic : req.body.cover_pic,
             caption : req.body.caption,
-            postType : req.body.postType 
+            postType : req.body.post_type
         }
         await PostModel.create(postModel).then(() =>{
             res.send({
@@ -136,4 +137,95 @@ async function loadPost(req,res)
     }
 }
 
-export { createPost ,getPostAll ,getContestPost ,deletePost, loadPost };
+async function getContestPostLikes(req,res)
+{
+    try {
+        let rows =await PostModel.findAll({
+            include : [{
+                model : UserModel,
+                attributes : ['name','profilePic'],
+                required :true
+            },{
+                model : LikeModel,
+                attributes :[['like','liked']],
+                required :false,
+                where : {
+                    userId : req.body.uid
+                }
+            }],
+            raw : true,
+            where :{
+              contestId : req.body.cid 
+            },
+            offset : 6 *(req.body.mid - 1 ),
+            limit : 6,
+        });
+
+        return res.json(rows);
+        
+    } catch (error) {
+        res.status(400).send({
+            msg : error.message
+        });
+    }
+}
+
+async function editCaption(req,res){
+    try {
+
+        let rows = await PostModel.update({
+            caption : req.body.caption
+        },{
+            where : {
+                id : req.body.id
+            }
+        });
+
+        if(rows[0] != 0){
+            return res.json({
+                msg : "Updated"
+            });
+        }
+
+        return res.status(404).json({
+            msg : "Not Updated"
+        });
+
+        
+    } catch (error) {
+        res.status(400).send({
+            msg : error.message
+        });
+    }
+}
+
+async function editPrivate(req,res){
+    try {
+
+        let rows = await PostModel.update({
+            private : req.body.private
+        },{
+            where : {
+                id : req.body.id
+            }
+        });
+
+        if(rows[0] != 0){
+            return res.json({
+                msg : "Updated"
+            });
+        }
+
+        return res.status(404).json({
+            msg : "Not Updated"
+        });
+
+        
+    } catch (error) {
+        res.status(400).send({
+            msg : error.message
+        });
+    }
+}
+
+export { createPost ,getPostAll ,getContestPost ,deletePost, loadPost ,getContestPostLikes ,editCaption ,editPrivate };

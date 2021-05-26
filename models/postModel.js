@@ -1,5 +1,7 @@
 import { sequelize } from "../data/modelMake.js";
 import pkg from "sequelize";
+import { CommentModel } from "./commentModel.js";
+import { LikeModel } from "./likesModel.js";
 
 const{ DataTypes } = pkg
 
@@ -32,7 +34,9 @@ const PostModel = sequelize.define("PostDbs",{
     path : { type : DataTypes.STRING, allowNull : false },
     coverPic : { type : DataTypes.STRING , allowNull :true },
     caption : { type : DataTypes.STRING ,allowNull : true },
-    postType : { type : DataTypes.STRING , allowNull : false }
+    postType : { type : DataTypes.STRING , allowNull : false },
+    private : { type : DataTypes.BOOLEAN ,defaultValue:false },
+    likes : { type :DataTypes.INTEGER , defaultValue:0 } 
 },
 {
     indexes : [ 
@@ -40,7 +44,16 @@ const PostModel = sequelize.define("PostDbs",{
             unique :true,
             fields : ['userId' , 'contestId'],
         }
-    ]
+    ],
+    createdAt :false,
+    updatedAt :false
 });
+
+PostModel.hasMany(CommentModel,{foreignKey :'postId',onDelete:`CASCADE`});
+CommentModel.belongsTo(PostModel,{foreignKey :'postId',onDelete:`CASCADE`});
+
+PostModel.hasMany(LikeModel,{foreignKey :'postId',onDelete:`CASCADE`});
+LikeModel.belongsTo(PostModel,{foreignKey :'postId',onDelete:`CASCADE`});
+
 
 export { PostModel };

@@ -31,6 +31,9 @@ const ContestModel = sequelize.define("ContestDb" ,{
     coverPic : { type :DataTypes.STRING ,allowNull :true },
     endDt : { type :DataTypes.DATE , allowNull: false },
     end : { type: DataTypes.BOOLEAN, allowNull :true }
+},{
+    createdAt :false,
+    updatedAt :false
 });
 
 ContestModel.hasMany(PostModel,{ foreignKey : 'contestId' ,onDelete:`CASCADE`});
