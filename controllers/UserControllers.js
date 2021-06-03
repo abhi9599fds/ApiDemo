@@ -290,7 +290,7 @@ async function getById(req,res) {
                     }
                 }
             }) > 0 ? true : false;
-            console.log(user);
+            
 
             let posts = await PostModel.findAll({
                 include : [{
