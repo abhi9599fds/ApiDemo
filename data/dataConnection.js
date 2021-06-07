@@ -13,6 +13,21 @@ config();
 // var pgHost = pgHostPort.split(":")[0];
 // var pgPort = pgHostPort.split(":")[1];
 
+// const dbConn =  {
+//     HOST : pgHost,
+//     USER : pgUser,
+//     PASSWORD :  pgPass,
+//     PORT : pgPort,
+//     DATABASE : pgDb,
+//     dialect: "postgres",
+//     pool :{
+//         max: 5,
+//         min: 0,
+//         acquire: 30000,
+//         idle: 10000
+//     }
+// };
+
 const dbConn =  {
     HOST : "localhost",
     USER : "abhi9599",
@@ -27,5 +42,7 @@ const dbConn =  {
         idle: 10000
     }
 };
+
+
 
 export { dbConn };
